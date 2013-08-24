@@ -13,15 +13,20 @@ import java.util.UUID;
 import org.junit.Test;
 
 public class SerializableInputStreamTest {
-	private static final SerializableInputStreamConfiguration CONFIG = SerializableInputStreamConfiguration
-			.getInstance();
+	private static final SerializableInputStreamConfiguration CONFIG = SerializableInputStreamConfiguration.getInstance();
 	private static final Charset CHARSET = Charset.forName("UTF-8");
 
 	@Test
-	public void testUnencryptedWithTempFile() throws IOException,
-			ClassNotFoundException {
+	public void testWithTempFile() throws IOException, ClassNotFoundException {
 		final TempFileSerializationTempStore tempFileStore = new TempFileSerializationTempStore();
 		CONFIG.setSerializationTempStore(tempFileStore);
+		check();
+	}
+
+	@Test
+	public void testWithMemory() throws IOException, ClassNotFoundException {
+		final MemorySerializationTempStore memoryStore = new MemorySerializationTempStore();
+		CONFIG.setSerializationTempStore(memoryStore);
 		check();
 	}
 
@@ -32,18 +37,14 @@ public class SerializableInputStreamTest {
 		final SerializableInputStream out = new SerializableInputStream(payload);
 
 		final ByteArrayOutputStream serializedOutputStream = new ByteArrayOutputStream();
-		final ObjectOutputStream oos = new ObjectOutputStream(
-				serializedOutputStream);
+		final ObjectOutputStream oos = new ObjectOutputStream(serializedOutputStream);
 		oos.writeObject(out);
 		oos.close();
 		out.close();
 
-		final ByteArrayInputStream serializedInputStream = new ByteArrayInputStream(
-				serializedOutputStream.toByteArray());
-		final ObjectInputStream ois = new ObjectInputStream(
-				serializedInputStream);
-		final SerializableInputStream in = (SerializableInputStream) ois
-				.readObject();
+		final ByteArrayInputStream serializedInputStream = new ByteArrayInputStream(serializedOutputStream.toByteArray());
+		final ObjectInputStream ois = new ObjectInputStream(serializedInputStream);
+		final SerializableInputStream in = (SerializableInputStream) ois.readObject();
 
 		final ByteArrayOutputStream readOutputStream = new ByteArrayOutputStream();
 		int read = 0;
@@ -53,8 +54,7 @@ public class SerializableInputStreamTest {
 		}
 		in.close();
 
-		final String recoveredPayloadString = new String(
-				readOutputStream.toByteArray(), CHARSET);
+		final String recoveredPayloadString = new String(readOutputStream.toByteArray(), CHARSET);
 		assertEquals(payloadString, recoveredPayloadString);
 	}
 
