@@ -2,9 +2,8 @@ package com.dajudge.serinstream;
 
 /**
  * A singleton class to configure serialization used by
- * {@link SerializableInputStream}. The default configuration serialized to a
- * file in the user's temp directory, imposes no limit on the upload size and
- * does not use encryption.
+ * {@link SerializableInputStream}. The default configuration serializes into
+ * memory.
  * 
  * @author Alex Stockinger
  */
@@ -20,15 +19,14 @@ public class SerializableInputStreamConfiguration {
 	 */
 	private static SerializableInputStreamConfiguration createDefaultConfiguration() {
 		final SerializableInputStreamConfiguration ret = new SerializableInputStreamConfiguration();
-		ret.setSerializationTempStore(new TempFileSerializationTempStore());
+		ret.setSerializationTempStore(new MemorySerializationTempStore());
 		return ret;
 	}
 
 	/**
 	 * Sets the serialization temp store. The temp store is used for persisting
-	 * serialization data while the stream is retrieved. By default the user's
-	 * temporary directory is used for storing the data in order to avoid out of
-	 * memory situations.
+	 * serialization data while the stream is retrieved. By default the main
+	 * memory is used to cache the deserialized data.
 	 * 
 	 * @param tempStore
 	 *            the temp store the be used for deserialization.
