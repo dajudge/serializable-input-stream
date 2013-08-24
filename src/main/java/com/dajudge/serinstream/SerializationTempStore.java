@@ -1,6 +1,5 @@
 package com.dajudge.serinstream;
 
-
 /**
  * Interface to handle storage of serialization temp data.
  * 
@@ -8,10 +7,12 @@ package com.dajudge.serinstream;
  */
 public interface SerializationTempStore {
 
-    /**
-     * Creates an instance in the temp store that can be used for storing the temporary data.
-     * 
-     * @return an instance in the temp store that can be used for storing the temporary data.
-     */
-    TempStoreInstance createTempStoreInstance();
+	/**
+	 * Creates an instance in the temp store that can be used for storing the
+	 * temporary data.
+	 * 
+	 * @return an instance in the temp store that can be used for storing the
+	 *         temporary data.
+	 */
+	TempStoreInstance createTempStoreInstance();
 }

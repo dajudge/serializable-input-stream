@@ -15,12 +15,10 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Alex Stockinger
  */
-public final class SerializableInputStream extends InputStream implements
-		Serializable {
+public final class SerializableInputStream extends InputStream implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	static final transient Logger LOG = LoggerFactory
-			.getLogger(SerializableInputStream.class);
+	private static final transient Logger LOG = LoggerFactory.getLogger(SerializableInputStream.class);
 
 	/**
 	 * The default buffer size used when serializing.
@@ -49,8 +47,7 @@ public final class SerializableInputStream extends InputStream implements
 	 * @param bufferSize
 	 *            the buffer size to be used when serializing.
 	 */
-	public SerializableInputStream(final InputStream stream,
-			final int bufferSize) {
+	public SerializableInputStream(final InputStream stream, final int bufferSize) {
 		if (stream == null) {
 			throw new IllegalArgumentException("stream must not be null");
 		}
@@ -64,8 +61,7 @@ public final class SerializableInputStream extends InputStream implements
 	private void writeObject(final ObjectOutputStream out) throws IOException {
 		LOG.debug("Serializing input stream with buffer size " + bufferSize);
 		if (stream == null) {
-			throw new IllegalArgumentException(
-					"Serializable input stream not ready for serialization");
+			throw new IllegalArgumentException("Serializable input stream not ready for serialization");
 		}
 		final byte[] data = new byte[bufferSize];
 		int read;
@@ -77,14 +73,11 @@ public final class SerializableInputStream extends InputStream implements
 		out.writeInt(0);
 	}
 
-	private void readObject(final ObjectInputStream in) throws IOException,
-			ClassNotFoundException {
-		final SerializationTempStore tempStore = SerializableInputStreamConfiguration
-				.getInstance().getSerializationTempStore();
+	private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+		final SerializationTempStore tempStore = SerializableInputStreamConfiguration.getInstance().getSerializationTempStore();
 		tempStoreInstance = tempStore.createTempStoreInstance();
 		LOG.debug("Deserializing input stream to " + tempStore);
-		final Integer overallBytes = tempStoreInstance
-				.store(new PipeToTempStoreCallback(in));
+		final Integer overallBytes = tempStoreInstance.store(new PipeToTempStoreCallback(in));
 		LOG.debug("Successfully read " + overallBytes + " bytes");
 		stream = tempStoreInstance.retrieve();
 		bufferSize = DEFAULT_BUFFER_SIZE;
@@ -103,8 +96,7 @@ public final class SerializableInputStream extends InputStream implements
 	}
 
 	@Override
-	public int read(final byte[] b, final int off, final int len)
-			throws IOException {
+	public int read(final byte[] b, final int off, final int len) throws IOException {
 		checkReadyToRead();
 		return stream.read(b, off, len);
 	}
@@ -141,8 +133,7 @@ public final class SerializableInputStream extends InputStream implements
 
 	private void checkReadyToRead() {
 		if (stream == null) {
-			throw new IllegalArgumentException(getClass().getName()
-					+ " not ready for reading");
+			throw new IllegalArgumentException(getClass().getName() + " not ready for reading");
 		}
 	}
 
