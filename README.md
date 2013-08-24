@@ -1,7 +1,7 @@
-Serializable input stream
-=========================
+Serializable InputStream
+========================
 
-This is an implementation of an input stream that can be serialized
+This is an implementation of an InputStream that can be serialized
 using Java's standard serialization mechanism.
 
 By default it uses the main memory to temporarily store the data
