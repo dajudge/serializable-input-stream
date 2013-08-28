@@ -2,7 +2,7 @@ package com.dajudge.serinstream;
 
 /**
  * A singleton class to configure serialization used by
- * {@link SerializableInputStream}. The default configuration serializes into
+ * {@link SerializableInputStream}. The default configuration deserializes into
  * memory.
  * 
  * @author Alex Stockinger
