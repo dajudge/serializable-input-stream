@@ -21,7 +21,7 @@ public final class SerializableInputStream extends InputStream implements Serial
 	private static final transient Logger LOG = LoggerFactory.getLogger(SerializableInputStream.class);
 
 	private transient InputStream stream;
-	private transient int bufferSize;
+	private transient int serializationBufferSize;
 	private transient TempStoreInstance tempStoreInstance;
 
 	/**
@@ -49,16 +49,16 @@ public final class SerializableInputStream extends InputStream implements Serial
 		if (bufferSize <= 0) {
 			throw new IllegalArgumentException("bufferSize must be > 0");
 		}
-		this.bufferSize = bufferSize;
+		this.serializationBufferSize = bufferSize;
 		this.stream = stream;
 	}
 
 	private void writeObject(final ObjectOutputStream out) throws IOException {
-		LOG.debug("Serializing input stream with buffer size " + bufferSize);
+		LOG.debug("Serializing input stream with buffer size " + serializationBufferSize);
 		if (stream == null) {
 			throw new IllegalArgumentException("Serializable input stream not ready for serialization");
 		}
-		final byte[] data = new byte[bufferSize];
+		final byte[] data = new byte[serializationBufferSize];
 		int read;
 		while ((read = stream.read(data)) > 0) {
 			LOG.trace("Writing " + read + " bytes");
@@ -75,7 +75,7 @@ public final class SerializableInputStream extends InputStream implements Serial
 		final Integer overallBytes = tempStoreInstance.store(new PipeToTempStoreCallback(in));
 		LOG.debug("Successfully read " + overallBytes + " bytes");
 		stream = tempStoreInstance.retrieve();
-		bufferSize = config().getDefaultWriteChunkSize();
+		serializationBufferSize = config().getDefaultWriteChunkSize();
 	}
 
 	private static SerializableInputStreamConfiguration config() {
