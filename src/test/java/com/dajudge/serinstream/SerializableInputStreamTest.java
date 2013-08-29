@@ -15,10 +15,13 @@ import org.junit.Test;
 public class SerializableInputStreamTest {
 	private static final SerializableInputStreamConfiguration CONFIG = SerializableInputStreamConfiguration.getInstance();
 	private static final Charset CHARSET = Charset.forName("UTF-8");
+	private static final int DEFAULT_WRITE_CHUNK_SIZE = 2048;
+	private static final SerializationTempStore DEFAULT_SERIALIZATION_TEMP_STORE = new MemorySerializationTempStore();
 
 	@Test
 	public void testWithTempFile() throws IOException, ClassNotFoundException {
 		final TempFileSerializationTempStore tempFileStore = new TempFileSerializationTempStore();
+		CONFIG.setDefaultWriteChunkSize(DEFAULT_WRITE_CHUNK_SIZE);
 		CONFIG.setSerializationTempStore(tempFileStore);
 		check();
 	}
@@ -26,7 +29,22 @@ public class SerializableInputStreamTest {
 	@Test
 	public void testWithMemory() throws IOException, ClassNotFoundException {
 		final MemorySerializationTempStore memoryStore = new MemorySerializationTempStore();
+		CONFIG.setDefaultWriteChunkSize(DEFAULT_WRITE_CHUNK_SIZE);
 		CONFIG.setSerializationTempStore(memoryStore);
+		check();
+	}
+
+	@Test
+	public void testWithSmallChunkSize() throws IOException, ClassNotFoundException {
+		CONFIG.setSerializationTempStore(DEFAULT_SERIALIZATION_TEMP_STORE);
+		CONFIG.setDefaultWriteChunkSize(1024 * 1024);
+		check();
+	}
+
+	@Test
+	public void testWithLargeChunkSize() throws IOException, ClassNotFoundException {
+		CONFIG.setSerializationTempStore(DEFAULT_SERIALIZATION_TEMP_STORE);
+		CONFIG.setDefaultWriteChunkSize(1);
 		check();
 	}
 
