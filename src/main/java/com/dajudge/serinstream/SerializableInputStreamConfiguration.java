@@ -35,6 +35,13 @@ public class SerializableInputStreamConfiguration {
 		this.tempStore = tempStore;
 	}
 
+	/**
+	 * Returns the serialization temp store. The temp store is used for
+	 * persisting serialization data while the stream is retrieved. By default
+	 * the main memory is used to cache the deserialized data.
+	 * 
+	 * @return the serialization temp store.
+	 */
 	public SerializationTempStore getSerializationTempStore() {
 		return tempStore;
 	}
@@ -47,4 +54,30 @@ public class SerializableInputStreamConfiguration {
 	public static SerializableInputStreamConfiguration getInstance() {
 		return INSTANCE;
 	}
+
+	/**
+	 * Sets the default chunk size that is used when piping data from the
+	 * sending-side {@link InputStream} to the serializing
+	 * {@link ObjectOutputStream}. The default write chunk size defaults to 2048
+	 * bytes.
+	 * 
+	 * @param defaultWriteChunkSize
+	 *            the default chunk size in bytes.
+	 */
+	public void setDefaultWriteChunkSize(int defaultWriteChunkSize) {
+		this.defaultWriteChunkSize = defaultWriteChunkSize;
+	}
+
+	/**
+	 * Returns the default chunk size that is used when piping data from the
+	 * sending-side {@link InputStream} to the serializing
+	 * {@link ObjectOutputStream}. The default write chunk size defaults to 2048
+	 * bytes.
+	 * 
+	 * @return the write chunk size.
+	 */
+	public int getDefaultWriteChunkSize() {
+		return defaultWriteChunkSize;
+	}
+
 }
