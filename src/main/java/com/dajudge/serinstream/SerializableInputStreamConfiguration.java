@@ -12,6 +12,10 @@ public class SerializableInputStreamConfiguration {
 
 	private SerializationTempStore tempStore;
 
+	private int defaultWriteChunkSize;
+
+	private static final int DEFAULT_DEFAULT_WRITE_CHUNK_SIZE = 2048;
+
 	/**
 	 * Creates the default configuration.
 	 * 
@@ -20,6 +24,7 @@ public class SerializableInputStreamConfiguration {
 	private static SerializableInputStreamConfiguration createDefaultConfiguration() {
 		final SerializableInputStreamConfiguration ret = new SerializableInputStreamConfiguration();
 		ret.setSerializationTempStore(new MemorySerializationTempStore());
+		ret.setDefaultWriteChunkSize(DEFAULT_DEFAULT_WRITE_CHUNK_SIZE);
 		return ret;
 	}
 

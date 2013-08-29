@@ -20,11 +20,6 @@ public final class SerializableInputStream extends InputStream implements Serial
 	private static final long serialVersionUID = 1L;
 	private static final transient Logger LOG = LoggerFactory.getLogger(SerializableInputStream.class);
 
-	/**
-	 * The default buffer size used when serializing.
-	 */
-	private static final int DEFAULT_BUFFER_SIZE = 2048;
-
 	private transient InputStream stream;
 	private transient int bufferSize;
 	private transient TempStoreInstance tempStoreInstance;
@@ -36,7 +31,7 @@ public final class SerializableInputStream extends InputStream implements Serial
 	 *            the stream to serialize.
 	 */
 	public SerializableInputStream(final InputStream stream) {
-		this(stream, DEFAULT_BUFFER_SIZE);
+		this(stream, config().getDefaultWriteChunkSize());
 	}
 
 	/**
@@ -74,13 +69,17 @@ public final class SerializableInputStream extends InputStream implements Serial
 	}
 
 	private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
-		final SerializationTempStore tempStore = SerializableInputStreamConfiguration.getInstance().getSerializationTempStore();
+		final SerializationTempStore tempStore = config().getSerializationTempStore();
 		tempStoreInstance = tempStore.createTempStoreInstance();
 		LOG.debug("Deserializing input stream to " + tempStore);
 		final Integer overallBytes = tempStoreInstance.store(new PipeToTempStoreCallback(in));
 		LOG.debug("Successfully read " + overallBytes + " bytes");
 		stream = tempStoreInstance.retrieve();
-		bufferSize = DEFAULT_BUFFER_SIZE;
+		bufferSize = config().getDefaultWriteChunkSize();
+	}
+
+	private static SerializableInputStreamConfiguration config() {
+		return SerializableInputStreamConfiguration.getInstance();
 	}
 
 	@Override

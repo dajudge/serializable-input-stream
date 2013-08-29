@@ -12,6 +12,5 @@ can be integrated easily, a file-based temp store using the user's temp
 directory is provided as well.
 
 TODO:
- - Make writing chunk size configurable
  - Don't allocate the whole chunk size on deserialization, this is a potential OutOfMemory
  - Allow to limit the file size during deserialization
